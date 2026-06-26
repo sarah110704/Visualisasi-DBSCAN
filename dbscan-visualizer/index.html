@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DBSCAN Clustering Visualizer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="page-shell">
+    <section class="hero-card">
+      <div>
+        <p class="eyebrow">Algorithm Visualization</p>
+        <h1>DBSCAN Clustering Visualizer</h1>
+        <p class="hero-text">
+          Visualisasi sederhana untuk memahami bagaimana DBSCAN mengelompokkan titik data berdasarkan kepadatan, tanpa harus menentukan jumlah cluster dari awal.
+        </p>
+      </div>
+      <div class="hero-badge">
+        <span>Model</span>
+        <strong>DBSCAN</strong>
+      </div>
+    </section>
+
+    <section class="layout-grid">
+      <section class="panel graph-panel">
+        <div class="panel-header">
+          <div>
+            <h2>Area data</h2>
+            <p>Setiap titik dianggap sebagai lokasi data. Klik grafik untuk menambah titik sebelum proses dimulai.</p>
+          </div>
+          <div class="legend">
+            <span><i class="dot unvisited"></i> Belum dicek</span>
+            <span><i class="dot current"></i> Sedang dicek</span>
+            <span><i class="dot noise"></i> Noise</span>
+          </div>
+        </div>
+
+        <div class="canvas-wrap">
+          <canvas id="clusterCanvas" width="820" height="520" aria-label="DBSCAN canvas"></canvas>
+        </div>
+
+        <div class="controls">
+          <button id="sampleBtn" class="btn primary">Data contoh</button>
+          <button id="stepBtn" class="btn">Step berikutnya</button>
+          <button id="autoBtn" class="btn">Jalankan otomatis</button>
+          <button id="resetBtn" class="btn ghost">Reset</button>
+        </div>
+      </section>
+
+      <aside class="side-stack">
+        <section class="panel">
+          <h2>Pengaturan sederhana</h2>
+          <div class="setting-row">
+            <div>
+              <label for="epsSlider">Radius pencarian, eps</label>
+              <p>Lingkaran jarak untuk mencari tetangga di sekitar titik.</p>
+            </div>
+            <strong id="epsValue">70</strong>
+          </div>
+          <input id="epsSlider" type="range" min="40" max="120" value="70" />
+
+          <div class="setting-row small-gap">
+            <div>
+              <label>Minimal tetangga, MinPts</label>
+              <p>Jumlah titik minimal agar sebuah area dianggap padat.</p>
+            </div>
+            <strong id="minPtsValue">4</strong>
+          </div>
+        </section>
+
+        <section class="panel status-panel">
+          <h2>Status proses</h2>
+          <div class="stat-grid">
+            <div class="stat-card">
+              <span>Titik dicek</span>
+              <strong id="visitedCount">0</strong>
+            </div>
+            <div class="stat-card">
+              <span>Cluster</span>
+              <strong id="clusterCount">0</strong>
+            </div>
+            <div class="stat-card">
+              <span>Noise</span>
+              <strong id="noiseCount">0</strong>
+            </div>
+            <div class="stat-card">
+              <span>Status</span>
+              <strong id="runStatus">Siap</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel explanation-panel">
+          <h2>Step penjelasan</h2>
+          <div class="step-number" id="stepNumber">Step 0</div>
+          <h3 id="stepTitle">Mulai dari data titik</h3>
+          <p id="stepText">
+            Klik Data contoh, lalu tekan Step berikutnya. Algoritma akan memilih satu titik, mencari tetangganya, lalu menentukan apakah titik itu masuk cluster atau noise.
+          </p>
+        </section>
+      </aside>
+    </section>
+
+    <section class="panel info-panel">
+      <h2>Cara kerja DBSCAN</h2>
+      <div class="info-grid">
+        <article>
+          <span>1</span>
+          <h3>Pilih satu titik</h3>
+          <p>Algoritma mengambil titik yang belum pernah diperiksa.</p>
+        </article>
+        <article>
+          <span>2</span>
+          <h3>Cari tetangga</h3>
+          <p>DBSCAN menggambar radius eps, lalu menghitung titik lain yang berada di dalam radius tersebut.</p>
+        </article>
+        <article>
+          <span>3</span>
+          <h3>Cek kepadatan</h3>
+          <p>Jika jumlah titik dalam radius minimal sama dengan MinPts, titik itu menjadi core point.</p>
+        </article>
+        <article>
+          <span>4</span>
+          <h3>Bentuk cluster</h3>
+          <p>Core point dan titik-titik yang terhubung dekat akan dimasukkan ke cluster yang sama.</p>
+        </article>
+        <article>
+          <span>5</span>
+          <h3>Tandai noise</h3>
+          <p>Titik yang terlalu jauh dan tidak punya cukup tetangga akan dianggap noise.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="panel terms-panel">
+      <h2>Arti istilah penting</h2>
+      <div class="terms-grid">
+        <article>
+          <h3>eps</h3>
+          <p>Radius pencarian. Semakin besar eps, semakin banyak titik yang dianggap dekat.</p>
+        </article>
+        <article>
+          <h3>MinPts</h3>
+          <p>Jumlah minimal titik dalam radius agar area dianggap cukup padat.</p>
+        </article>
+        <article>
+          <h3>Core point</h3>
+          <p>Titik utama dalam cluster, karena punya tetangga yang cukup banyak.</p>
+        </article>
+        <article>
+          <h3>Border point</h3>
+          <p>Titik pinggir cluster. Tetangganya tidak banyak, tetapi masih dekat dengan core point.</p>
+        </article>
+        <article>
+          <h3>Noise</h3>
+          <p>Titik yang tidak masuk cluster karena posisinya terlalu jauh dari kelompok data lain.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
